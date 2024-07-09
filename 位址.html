@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>顯示使用者位置</title>
+    <script>
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById("location").innerHTML = "緯度: " + latitude + "<br>經度: " + longitude;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("location").innerHTML = "使用者拒絕了地理定位請求。";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("location").innerHTML = "位置信息不可用。";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("location").innerHTML = "請求超時。";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("location").innerHTML = "未知錯誤。";
+                    break;
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 10000 });
+            } else {
+                document.getElementById("location").innerHTML = "瀏覽器不支援地理定位。";
+            }
+        }
+
+        window.onload = function() {
+            getLocation();
+            setInterval(getLocation, 3000); // 每隔3秒調用一次getLocation
+        }
+    </script>
+</head>
+<body>
+    <h1>使用者位置</h1>
+    <div id="location">正在取得位置...</div>
+</body>
+</html>
